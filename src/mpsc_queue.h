@@ -50,6 +50,8 @@ class MPSCQueue
 
     void push (T value)
     {
+        assert (value);
+
         Node * n = new Node ();
         n->value = value;
 
@@ -65,23 +67,20 @@ class MPSCQueue
     {
         //
         // We aways want to keep one node on the queue
-        // So use node's value as an extra check to see if it's being used.
         //
         Node * tail = tail_;
         Node * next = tail->next;
         value = nullptr;
 
-        if (tail->value != nullptr)
-        {
-            value = tail->value;
-            tail->value = nullptr;
-        }
+        //
+        // tail never has a value.
+        // The next one in line does.
 
         if (next == nullptr)
         {
             // No nodes after us. We need to leave at least one
             // on the queue. Return the result's success status
-            return value != nullptr;
+            return false;
         }
 
         //
@@ -90,8 +89,8 @@ class MPSCQueue
         value = next->value;
         next->value = nullptr;
         tail_ = next;
-        delete tail;
 
+        delete tail;
 
         return true;
 

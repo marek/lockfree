@@ -63,7 +63,7 @@ void MPSCLockFreeTest::run ()
 
     Event e;
 
-    auto thread_count = 1;//threads ();
+    auto thread_count = threads ();
     auto lines_per_thread = iterations () / threads ();
 
     std::vector<std::thread> writers;

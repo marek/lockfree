@@ -2,19 +2,19 @@
 #include <vector>
 #include <thread>
 
-#include "MultipleLockFree.h"
+#include "rblockfree.h"
 #include "event.h"
 
 namespace lockfree {
 
-MultipleLockFreeTest::MultipleLockFreeTest (int iterations, int threads)
-  : Test {"multiplelockfree", iterations, threads},
+RBLockFreeTest::RBLockFreeTest (int iterations, int threads)
+  : Test {"rblockfree", iterations, threads},
     logQueue_ {25000}
 {
 
 }
 
-void MultipleLockFreeTest::worker ()
+void RBLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
@@ -29,14 +29,14 @@ void MultipleLockFreeTest::worker ()
     }
 }
 
-void MultipleLockFreeTest::log (const std::string & logLine)
+void RBLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void MultipleLockFreeTest::run ()
+void RBLockFreeTest::run ()
 {
-    std::thread threadWorker (&MultipleLockFreeTest::worker, this);
+    std::thread threadWorker (&RBLockFreeTest::worker, this);
 
     Event e;
 

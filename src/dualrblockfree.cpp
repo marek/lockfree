@@ -2,7 +2,7 @@
 #include <vector>
 #include <thread>
 
-#include "OptimalLockFree.h"
+#include "dualrblockfree.h"
 #include "event.h"
 
 namespace lockfree {
@@ -10,8 +10,8 @@ namespace lockfree {
 #define FREE_BUFFER_SIZE 25000
 #define QUEUE_SIZE 25000
 
-OptimalLockFreeTest::OptimalLockFreeTest (int iterations, int threads)
-  : Test {"optimallockfree", iterations, threads},
+DualRBLockFreeTest::DualRBLockFreeTest (int iterations, int threads)
+  : Test {"dualrblockfree", iterations, threads},
     freeBuffers_ {FREE_BUFFER_SIZE},
     logQueue_ {QUEUE_SIZE}
 {
@@ -23,7 +23,7 @@ OptimalLockFreeTest::OptimalLockFreeTest (int iterations, int threads)
     }
 }
 
-OptimalLockFreeTest::~OptimalLockFreeTest ()
+DualRBLockFreeTest::~DualRBLockFreeTest ()
 {
     while (freeBuffers_.size () > 0)
     {
@@ -38,7 +38,7 @@ OptimalLockFreeTest::~OptimalLockFreeTest ()
     }
 }
 
-void OptimalLockFreeTest::worker ()
+void DualRBLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
@@ -54,14 +54,14 @@ void OptimalLockFreeTest::worker ()
     logFile_.flush ();
 }
 
-void OptimalLockFreeTest::log (const std::string & logLine)
+void DualRBLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void OptimalLockFreeTest::run ()
+void DualRBLockFreeTest::run ()
 {
-    std::thread threadWorker (&OptimalLockFreeTest::worker, this);
+    std::thread threadWorker (&DualRBLockFreeTest::worker, this);
 
     Event e;
 

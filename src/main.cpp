@@ -7,8 +7,8 @@
 #include "multipledirect.h"
 #include "worker.h"
 #include "multipleworker.h"
-#include "multiplelockfree.h"
-#include "optimallockfree.h"
+#include "rblockfree.h"
+#include "dualrblockfree.h"
 #include "spsclockfree.h"
 #include "mpsclockfree.h"
 
@@ -30,10 +30,10 @@ int main ()
         &createInstance<MultipleDirectWriteTest>,
         &createInstance<WorkerTest>,
         &createInstance<MultipleWorkerTest>,
-        &createInstance<MultipleLockFreeTest>,
-        &createInstance<OptimalLockFreeTest>,
+        &createInstance<RBLockFreeTest>,
+        &createInstance<DualRBLockFreeTest>,
+        &createInstance<MPSCLockFreeTest>,
         &createInstance<SPSCLockFreeTest>,
-        &createInstance<MPSCLockFreeTest>
     };
 
     int sample_sizes [] = {
