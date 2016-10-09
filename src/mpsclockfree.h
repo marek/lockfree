@@ -1,19 +1,21 @@
 #pragma once
 
+#include <vector>
 #include <string>
 #include <list>
 #include <mutex>
 
 #include "test.h"
 #include "circularbuffer.h"
+#include "mpsc_queue.h"
 
 namespace lockfree {
 
-class OptimalLockFreeTest : public Test
+class MPSCLockFreeTest : public Test
 {
   public:
-    OptimalLockFreeTest (int iterations, int threads);
-    ~OptimalLockFreeTest ();
+    MPSCLockFreeTest (int iterations, int threads);
+    ~MPSCLockFreeTest ();
     void run ();
 
   private:
@@ -21,8 +23,9 @@ class OptimalLockFreeTest : public Test
     void worker ();
     std::mutex logMutex_;
     volatile bool running_;
+
     CircularBuffer<std::string*> freeBuffers_;
-    CircularBuffer<std::string*> logQueue_;
+    MPSCQueue<std::string*> logQueue_;
 };
 
 } // namespace lockfree

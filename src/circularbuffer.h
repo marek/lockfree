@@ -20,12 +20,11 @@ class CircularBuffer
         "Type must be a pointer."
     );
 
-
 private:
     __attribute__((aligned(CACHE_SIZE))) std::atomic<uint64_t> high_;
     __attribute__((aligned(CACHE_SIZE))) std::atomic<uint64_t> low_;
     __attribute__((aligned(CACHE_SIZE))) size_t capacity_;
-    __attribute__((aligned(CACHE_SIZE))) T* buffer_;
+    __attribute__((aligned(CACHE_SIZE))) T * buffer_;
 
 public:
     explicit CircularBuffer(size_t capacity)

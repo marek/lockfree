@@ -27,7 +27,8 @@ class Test
 
     static std::string getWord ();
     static std::string getSentence ();
-
+    static void getWord (std::string & s);
+    static void getSentence (std::string & s);
   protected:
 
     std::ofstream logFile_;

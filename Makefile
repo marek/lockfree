@@ -19,7 +19,7 @@ CLEAN := $(d)/logs/*
 CXX := clang -x c++
 LD := clang++
 LDFLAGS :=  -arch x86_64
-CXXFLAGS := -x c++ -O2 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
+CXXFLAGS := -x c++ -O0 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
 
 
 #
@@ -95,7 +95,7 @@ clean:
 
 
 run: $(TARGET)
-	$(call echo_cmd,RUN $(TARGET)) $(TARGET)
+	$(call echo_cmd,RUN $(TARGET)) $(TARGET) | tee $(d)/logs/output.txt
 
 debug: $(TARGET)
 	$(call echo_cmd,DEBUG $(TARGET)) lldb $(TARGET)

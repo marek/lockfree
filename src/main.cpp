@@ -9,6 +9,8 @@
 #include "multipleworker.h"
 #include "multiplelockfree.h"
 #include "optimallockfree.h"
+#include "spsclockfree.h"
+#include "mpsclockfree.h"
 
 using namespace lockfree;
 
@@ -29,7 +31,9 @@ int main ()
         &createInstance<WorkerTest>,
         &createInstance<MultipleWorkerTest>,
         &createInstance<MultipleLockFreeTest>,
-        &createInstance<OptimalLockFreeTest>
+        &createInstance<OptimalLockFreeTest>,
+        &createInstance<SPSCLockFreeTest>,
+        &createInstance<MPSCLockFreeTest>
     };
 
     int sample_sizes [] = {
@@ -42,6 +46,10 @@ int main ()
         1000000
     };
 
+
+    //
+    // Print the header
+    //
     std::cout << std::setw(30) << std::left
               << "[ TESTNAME ]";
 
@@ -52,6 +60,10 @@ int main ()
     }
     std::cout << std::endl;
 
+
+    //
+    // Create & run the tests spitting out results
+    //
     for (auto & creator : tests)
     {
         bool first = true;
@@ -68,7 +80,10 @@ int main ()
 
             test->run ();
 
-            std::string testTime = std::to_string(test->duration ().count ()) + "s";
+            std::string testTime = std::to_string (
+                    test->duration ().count ()
+                ) + "s";
+
             std::cout << std::setw(16) << std::right
                       << testTime;
             std::cout.flush ();

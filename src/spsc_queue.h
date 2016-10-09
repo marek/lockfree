@@ -1,4 +1,8 @@
+#pragma once
 
+#include <atomic>
+
+namespace lockfree {
 //
 // Based on http://www.drdobbs.com/parallel/writing-lock-free-code-a-corrected-queue/210604448?pgno=2
 //
@@ -23,8 +27,8 @@ class SPSCQueue
         T value;
         Node * next;
     };
-    Node * head_;                     // for producer only
-    atomic<Node *> divider_, tail_;   // shared
+    Node * head_;                          // for producer only
+    std::atomic<Node *> divider_, tail_;   // shared
 
   public:
     SPSCQueue ()
@@ -42,10 +46,12 @@ class SPSCQueue
         }
     }
 
-    void Push (const T & value)
+    void push (const T & value)
     {
-        tail_->next = new Node(value);     // add the new item
-        tail_  = tail_->next;              // publish it
+        auto tail = tail_.load ();
+        tail->next = new Node(value);     // add the new item
+        tail_  = tail->next;              // publish it
+
         while( head_ != divider_ )
         {
             // trim unused nodes
@@ -55,15 +61,18 @@ class SPSCQueue
         }
     }
 
-    bool Pop ( T & result )
+    bool pop ( T & result )
     {
-        if ( divider_ != tail_ )
+        auto divider = divider_.load ();
+        if ( divider != tail_ )
         {
             // if queue is nonempty
-            result = divider_->next->value;  // C: copy it back
-            divider_ = divider_->next;        // D: publish that we took it
-            return true;                    // and report success
+            result = divider->next->value;    // C: copy it back
+            divider_ = divider->next;        // D: publish that we took it
+            return true;                      // and report success
         }
         return false;               // else report empty
     }
 };
+
+} // namespace lockfree

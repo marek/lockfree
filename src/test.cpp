@@ -73,5 +73,33 @@ std::string Test::getSentence ()
     return sentence.str ();
 }
 
+void Test::getWord (std::string & s)
+{
+    int maxLen = 2+rand ()%18;
+    for (int i = 0; i < maxLen; ++i)
+    {
+        char c = '!' + rand ()%93;
+        s += c;
+    }
+}
+
+void Test::getSentence (std::string & s)
+{
+    s.clear ();
+    s += "[";
+    s += std::to_string (std::time (nullptr));
+    s += "] ";
+
+    int maxLen = 2+rand ()%18;
+
+    for (int i = 0; i < maxLen; ++i)
+    {
+        if (i != 0)
+        {
+            s += " ";
+        }
+        getWord (s);
+    }
+}
 
 } // lockfree

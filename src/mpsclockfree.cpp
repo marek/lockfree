@@ -2,18 +2,16 @@
 #include <vector>
 #include <thread>
 
-#include "OptimalLockFree.h"
+#include "mpsclockfree.h"
 #include "event.h"
 
 namespace lockfree {
 
 #define FREE_BUFFER_SIZE 25000
-#define QUEUE_SIZE 25000
 
-OptimalLockFreeTest::OptimalLockFreeTest (int iterations, int threads)
-  : Test {"optimallockfree", iterations, threads},
-    freeBuffers_ {FREE_BUFFER_SIZE},
-    logQueue_ {QUEUE_SIZE}
+MPSCLockFreeTest::MPSCLockFreeTest (int iterations, int threads)
+  : Test {"mpsclockfree", iterations, threads},
+    freeBuffers_ {FREE_BUFFER_SIZE}
 {
     for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
     {
@@ -23,29 +21,29 @@ OptimalLockFreeTest::OptimalLockFreeTest (int iterations, int threads)
     }
 }
 
-OptimalLockFreeTest::~OptimalLockFreeTest ()
+MPSCLockFreeTest::~MPSCLockFreeTest ()
 {
+    std::string * s;
     while (freeBuffers_.size () > 0)
     {
-        auto s = freeBuffers_.pop ();
+        s = freeBuffers_.pop ();
         delete s;
     }
 
-    while (logQueue_.size () > 0)
+    while (logQueue_.tryPop (s))
     {
-        auto s = logQueue_.pop ();
         delete s;
     }
 }
 
-void OptimalLockFreeTest::worker ()
+void MPSCLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
     {
-        while (logQueue_.size () > 0)
+        std::string * logLine;
+        while (logQueue_.tryPop (logLine))
         {
-            auto logLine = logQueue_.pop ();
             log (*logLine);
             freeBuffers_.push (logLine);
         }
@@ -54,18 +52,18 @@ void OptimalLockFreeTest::worker ()
     logFile_.flush ();
 }
 
-void OptimalLockFreeTest::log (const std::string & logLine)
+void MPSCLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void OptimalLockFreeTest::run ()
+void MPSCLockFreeTest::run ()
 {
-    std::thread threadWorker (&OptimalLockFreeTest::worker, this);
+    std::thread threadWorker (&MPSCLockFreeTest::worker, this);
 
     Event e;
 
-    auto thread_count = threads ();
+    auto thread_count = 1;//threads ();
     auto lines_per_thread = iterations () / threads ();
 
     std::vector<std::thread> writers;

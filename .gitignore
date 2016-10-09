@@ -1,0 +1,7 @@
+.DS_Store
+logs
+builds
+*.pyc
+*.sublime-project
+*.sublime-workspace
+
