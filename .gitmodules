@@ -1,0 +1,3 @@
+[submodule "submodules/makefiles"]
+	path = submodules/makefiles
+	url = git@github-ent.dev.oanda.com:application-framework/makefiles.git
