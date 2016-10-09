@@ -8,6 +8,7 @@ BIN_DIR := $(BUILD_DIR)/bin
 #
 # Project settings & targets
 #
+INCLUDES := $(d)/include
 SRCS := $(wildcard src/*.cpp)
 LIBS := -lc++ -lm -lSystem
 TARGET := $(BIN_DIR)/lockfree
@@ -22,10 +23,12 @@ LDFLAGS :=  -arch x86_64
 CXXFLAGS := -x c++ -O0 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
 
 
+
 #
 # Continue on with the build rules!!
 #
 OBJS := $(addprefix $(BUILD_DIR)/,$(SRCS:.cpp=.o))
+CXXFLAGS += $(foreach inc,$(INCLUDES),$(addprefix -I,$(inc)))
 
 define \n
 
