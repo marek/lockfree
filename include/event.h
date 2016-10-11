@@ -8,31 +8,31 @@ namespace lockfree {
 class Event
 {
   public:
-    Event(bool signaled = false) : signaled_(signaled)
+    Event (bool signaled = false) : signaled_ (signaled)
     {
     }
 
-    void set()
+    void set ()
     {
         {
-            std::unique_lock<std::mutex> lock(m_);
+            std::unique_lock<std::mutex> lock (m_);
             signaled_ = true;
         }
-        cv_.notify_all();
+        cv_.notify_all ();
     }
 
-    void unset()
+    void unset ()
     {
-        std::unique_lock<std::mutex> lock(m_);
+        std::unique_lock<std::mutex> lock (m_);
         signaled_ = false;
     }
 
-    void wait()
+    void wait ()
     {
-        std::unique_lock<std::mutex> lock(m_);
+        std::unique_lock<std::mutex> lock (m_);
         while (!signaled_)
         {
-            cv_.wait(lock);
+            cv_.wait (lock);
         }
     }
 

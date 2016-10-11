@@ -11,7 +11,7 @@ namespace lockfree {
 template <typename T>
 class MPSCQueue
 {
-    static_assert(
+    static_assert (
         std::is_pointer<T>::value,
         "Type must be a pointer."
     );
@@ -95,10 +95,9 @@ class MPSCQueue
         delete tail;
 
         return true;
-
     }
 
-    inline T pop()
+    inline T pop ()
     {
         T ret;
         while (!tryPop (ret))
@@ -107,7 +106,6 @@ class MPSCQueue
         }
         return ret;
     }
-
 };
 
 } // namespace lockfree

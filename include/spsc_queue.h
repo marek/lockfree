@@ -9,7 +9,7 @@ namespace lockfree {
 template <typename T>
 class SPSCQueue
 {
-    static_assert(
+    static_assert (
         std::is_pointer<T>::value,
         "Type must be a pointer."
     );
@@ -27,14 +27,14 @@ class SPSCQueue
         T value;
         Node * next;
     };
-    alignas(CACHE_SIZE) Node * head_;                 // for producer only
-    alignas(CACHE_SIZE) std::atomic<Node *> divider_; // shared
-    alignas(CACHE_SIZE) std::atomic<Node *> tail_;    // shared
+    alignas (CACHE_SIZE) Node * head_;                 // for producer only
+    alignas (CACHE_SIZE) std::atomic<Node *> divider_; // shared
+    alignas (CACHE_SIZE) std::atomic<Node *> tail_;    // shared
 
   public:
     SPSCQueue ()
     {
-        head_ = divider_ = tail_ = new Node( T() );   // add dummy separator
+        head_ = divider_ = tail_ = new Node ( T () );  // add dummy separator
     }
     ~SPSCQueue ()
     {
@@ -50,8 +50,8 @@ class SPSCQueue
     void push (const T & value)
     {
         auto tail = tail_.load ();
-        tail->next = new Node(value);     // add the new item
-        tail_  = tail->next;              // publish it
+        tail->next = new Node (value);     // add the new item
+        tail_  = tail->next;               // publish it
 
         while( head_ != divider_ )
         {

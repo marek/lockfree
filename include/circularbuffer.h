@@ -12,16 +12,16 @@ namespace lockfree {
 template<typename T>
 class CircularBuffer
 {
-    static_assert(
+    static_assert (
         std::is_pointer<T>::value,
         "Type must be a pointer."
     );
 
 private:
-    alignas(CACHE_SIZE) std::atomic<uint64_t> high_;
-    alignas(CACHE_SIZE) std::atomic<uint64_t> low_;
-    alignas(CACHE_SIZE) size_t capacity_;
-    alignas(CACHE_SIZE) T * buffer_;
+    alignas (CACHE_SIZE) std::atomic<uint64_t> high_;
+    alignas (CACHE_SIZE) std::atomic<uint64_t> low_;
+    alignas (CACHE_SIZE) size_t capacity_;
+    alignas (CACHE_SIZE) T * buffer_;
 
 public:
     explicit CircularBuffer(size_t capacity)
@@ -41,15 +41,15 @@ public:
     //
     // No copying or assignment
     //
-    CircularBuffer(const CircularBuffer&) = delete;
-    CircularBuffer& operator=(const CircularBuffer&) = delete;
+    CircularBuffer (const CircularBuffer&) = delete;
+    CircularBuffer& operator= (const CircularBuffer&) = delete;
 
-    inline bool tryPush(const T in)
+    inline bool tryPush (const T in)
     {
         assert(in);
 
-        const uint64_t low = low_.load(std::memory_order_relaxed);
-        uint64_t high = high_.load(std::memory_order_acquire);
+        const uint64_t low = low_.load (std::memory_order_relaxed);
+        uint64_t high = high_.load (std::memory_order_acquire);
         const uint64_t index = high % capacity_;
         if (buffer_[index] == nullptr
             && high - low < capacity_
@@ -66,9 +66,9 @@ public:
         return false;
     }
 
-    inline void push(const T in)
+    inline void push (const T in)
     {
-        while (!tryPush(in))
+        while (!tryPush (in))
         {
             // Empty
         }
@@ -76,10 +76,10 @@ public:
 
     inline T tryPop()
     {
-        const uint64_t high = high_.load(std::memory_order_relaxed);
-        uint64_t low = low_.load(std::memory_order_acquire);
+        const uint64_t high = high_.load (std::memory_order_relaxed);
+        uint64_t low = low_.load (std::memory_order_acquire);
         const uint64_t index = low % capacity_;
-        T const ret = const_cast<T>(buffer_[index]);
+        T const ret = const_cast<T> (buffer_[index]);
         if (ret
             && high > low
             && std::atomic_compare_exchange_strong_explicit (
@@ -93,7 +93,7 @@ public:
         return nullptr;
     }
 
-    inline T pop()
+    inline T pop ()
     {
         T ret;
         while (!(ret = tryPop ()))
@@ -103,10 +103,10 @@ public:
         return ret;
     }
 
-    inline size_t size()
+    inline size_t size ()
     {
-        const uint64_t high = high_.load(std::memory_order_relaxed);
-        const int64_t size = high - low_.load(std::memory_order_acquire);
+        const uint64_t high = high_.load (std::memory_order_relaxed);
+        const int64_t size = high - low_.load (std::memory_order_acquire);
         return size >= 0 ? size : 0;
     }
 };
