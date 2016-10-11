@@ -4,4 +4,5 @@ builds
 *.pyc
 *.sublime-project
 *.sublime-workspace
+*.o
 
