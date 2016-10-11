@@ -25,7 +25,7 @@ CXXFLAGS := -x c++ -O3 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdl
 
 
 #
-# Continue on with the build rules!!
+# Continue on with the build rules
 #
 OBJS := $(addprefix $(BUILD_DIR)/,$(SRCS:.cpp=.o))
 CXXFLAGS += $(foreach inc,$(INCLUDES),$(addprefix -I,$(inc)))

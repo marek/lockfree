@@ -24,3 +24,8 @@ to your particular use case. They rarely will be maxed out like this.
 - **spsclockfree**: Single Producer, Single Consumer queue holding free strings and as log queue. Two for each working thread. Shared amongst background writer.
 - **tdcblockfree**: Same as previous, but trying the same with two CircularBuffers per thread.
 
+### queue implementations / types
+- **spsc_queue**: Single Producer / Single Consumer. Max two threads. 1 to push. 1 to pop
+- **mpsc_queue**: Multiple Producer / Single Consumer. N threads to push. 1 to pop.
+- **circularbuffer**: Multiple Producer / Multiple Consumer. N threads to push. N threads to pop.
+
