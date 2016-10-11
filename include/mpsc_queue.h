@@ -50,6 +50,12 @@ class MPSCQueue
         }
     }
 
+    //
+    // No copying or assignment
+    //
+    SPSCQueue (const SPSCQueue&) = delete;
+    SPSCQueue& operator= (const SPSCQueue&) = delete;
+
     void push (T value)
     {
         assert (value);

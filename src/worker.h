@@ -15,7 +15,7 @@ class WorkerTest : public Test
 
   private:
     inline void log (const std::string & logLine);
-    void worker ();
+    void backgroundWriter ();
     std::mutex logMutex_;
     volatile bool running_;
     std::list<std::string> logQueue_;

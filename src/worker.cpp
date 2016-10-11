@@ -10,7 +10,7 @@ WorkerTest::WorkerTest (int iterations, int threads)
 
 }
 
-void WorkerTest::worker ()
+void WorkerTest::backgroundWriter ()
 {
     running_ = true;
     while (running_)
@@ -35,7 +35,7 @@ void WorkerTest::log (const std::string & logLine)
 
 void WorkerTest::run ()
 {
-    std::thread threadWorker (&WorkerTest::worker, this);
+    std::thread threadWorker (&WorkerTest::backgroundWriter, this);
 
     auto lines = iterations ();
 

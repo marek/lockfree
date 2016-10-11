@@ -12,7 +12,7 @@ MultipleWorkerTest::MultipleWorkerTest (int iterations, int threads)
 
 }
 
-void MultipleWorkerTest::worker ()
+void MultipleWorkerTest::backgroundWriter ()
 {
     running_ = true;
     while (running_)
@@ -26,7 +26,7 @@ void MultipleWorkerTest::worker ()
                 logQueue_.pop_front ();
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for (std::chrono::milliseconds (200));
     }
 }
 
@@ -37,7 +37,7 @@ void MultipleWorkerTest::log (const std::string & logLine)
 
 void MultipleWorkerTest::run ()
 {
-    std::thread threadWorker (&MultipleWorkerTest::worker, this);
+    std::thread threadWorker (&MultipleWorkerTest::backgroundWriter, this);
 
     Event e;
 
@@ -64,9 +64,9 @@ void MultipleWorkerTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
     running_ = false;

@@ -28,7 +28,7 @@ class ThreadedDualCBLockFreeTest : public Test
 
   private:
     inline void log (const std::string & logLine);
-    void worker ();
+    void backgroundWriter ();
     std::mutex logMutex_;
     volatile bool running_;
 

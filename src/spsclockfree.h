@@ -18,7 +18,7 @@ class SPSCLockFreeTest : public Test
     {
         ThreadData ();
         ~ThreadData ();
-        CircularBuffer<std::string*> freeBuffers_;
+        SPSCQueue<std::string*> freeBuffers_;
         SPSCQueue<std::string*> logQueue_;
     };
 
@@ -28,7 +28,7 @@ class SPSCLockFreeTest : public Test
 
   private:
     inline void log (const std::string & logLine);
-    void worker ();
+    void backgroundWriter ();
     std::mutex logMutex_;
     volatile bool running_;
 

@@ -23,6 +23,9 @@ Test::Test (const std::string & testName, int iterations, int threads)
     } ();
 
     logFile_.open (cwd + "/logs/" + testName_ + ".log");
+
+    // seed each test with the same result
+    srand (42);
 };
 
 void Test::start ()
@@ -58,7 +61,7 @@ std::string Test::getSentence ()
 {
     std::stringstream sentence;
 
-    sentence << "[" << std::time(nullptr) << "] ";
+    //sentence << "[" << std::time (nullptr) << "] ";
 
     int maxLen = 2+rand ()%18;
 
@@ -86,9 +89,9 @@ void Test::getWord (std::string & s)
 void Test::getSentence (std::string & s)
 {
     s.clear ();
-    s += "[";
+    /*s += "[";
     s += std::to_string (std::time (nullptr));
-    s += "] ";
+    s += "] ";*/
 
     int maxLen = 2+rand ()%18;
 

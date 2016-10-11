@@ -30,7 +30,7 @@ void MultipleDirectWriteTest::run ()
     for (unsigned int i = 0; i < thread_count; ++i)
     {
         writers.push_back (
-            std::thread ([&]()
+            std::thread ([&] ()
             {
                 e.wait ();
 
@@ -45,9 +45,9 @@ void MultipleDirectWriteTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
 }

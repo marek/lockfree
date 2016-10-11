@@ -17,7 +17,7 @@ ThreadedDualCBLockFreeTest::ThreadData::ThreadData ()
     for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
     {
         auto s = new std::string ();
-        s->reserve(1024);
+        s->reserve (1024);
         freeBuffers_.push (s);
     }
 }
@@ -56,7 +56,7 @@ ThreadedDualCBLockFreeTest::~ThreadedDualCBLockFreeTest ()
     }
 }
 
-void ThreadedDualCBLockFreeTest::worker ()
+void ThreadedDualCBLockFreeTest::backgroundWriter ()
 {
     running_ = true;
     while (running_)
@@ -83,7 +83,7 @@ void ThreadedDualCBLockFreeTest::log (const std::string & logLine)
 
 void ThreadedDualCBLockFreeTest::run ()
 {
-    std::thread threadWorker (&ThreadedDualCBLockFreeTest::worker, this);
+    std::thread threadWorker (&ThreadedDualCBLockFreeTest::backgroundWriter, this);
 
     Event e;
 
@@ -111,9 +111,9 @@ void ThreadedDualCBLockFreeTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
     running_ = false;

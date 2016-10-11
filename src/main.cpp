@@ -26,13 +26,13 @@ std::shared_ptr<Test> createInstance (int logLines)
 int main ()
 {
     std::vector<std::function<std::shared_ptr<Test>(int)>> tests = {
-        /*&createInstance<DirectWriteTest>,
+        &createInstance<DirectWriteTest>,
         &createInstance<MultipleDirectWriteTest>,
         &createInstance<WorkerTest>,
         &createInstance<MultipleWorkerTest>,
         &createInstance<CBLockFreeTest>,
         &createInstance<DualCBLockFreeTest>,
-        &createInstance<MPSCLockFreeTest>,*/
+        &createInstance<MPSCLockFreeTest>,
         &createInstance<SPSCLockFreeTest>,
         &createInstance<ThreadedDualCBLockFreeTest>
     };

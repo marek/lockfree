@@ -14,7 +14,7 @@ CBLockFreeTest::CBLockFreeTest (int iterations, int threads)
 
 }
 
-void CBLockFreeTest::worker ()
+void CBLockFreeTest::backgroundWriter ()
 {
     running_ = true;
     while (running_)
@@ -36,7 +36,7 @@ void CBLockFreeTest::log (const std::string & logLine)
 
 void CBLockFreeTest::run ()
 {
-    std::thread threadWorker (&CBLockFreeTest::worker, this);
+    std::thread threadWorker (&CBLockFreeTest::backgroundWriter, this);
 
     Event e;
 
@@ -64,9 +64,9 @@ void CBLockFreeTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
     running_ = false;

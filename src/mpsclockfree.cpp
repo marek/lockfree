@@ -16,7 +16,7 @@ MPSCLockFreeTest::MPSCLockFreeTest (int iterations, int threads)
     for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
     {
         auto s = new std::string ();
-        s->reserve(1024);
+        s->reserve (1024);
         freeBuffers_.push (s);
     }
 }
@@ -36,7 +36,7 @@ MPSCLockFreeTest::~MPSCLockFreeTest ()
     }
 }
 
-void MPSCLockFreeTest::worker ()
+void MPSCLockFreeTest::backgroundWriter ()
 {
     running_ = true;
     while (running_)
@@ -59,7 +59,7 @@ void MPSCLockFreeTest::log (const std::string & logLine)
 
 void MPSCLockFreeTest::run ()
 {
-    std::thread threadWorker (&MPSCLockFreeTest::worker, this);
+    std::thread threadWorker (&MPSCLockFreeTest::backgroundWriter, this);
 
     Event e;
 
@@ -86,9 +86,9 @@ void MPSCLockFreeTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
     running_ = false;

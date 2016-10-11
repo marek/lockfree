@@ -4,9 +4,12 @@
 #include <atomic>
 
 namespace lockfree {
+
 //
-// Based on http://www.drdobbs.com/parallel/writing-lock-free-code-a-corrected-queue/210604448?pgno=2
+// Based on Herb Sutter's spsc queue
+// http://www.drdobbs.com/parallel/writing-lock-free-code-a-corrected-queue/210604448?pgno=2
 //
+
 template <typename T>
 class SPSCQueue
 {
@@ -81,6 +84,12 @@ class SPSCQueue
         }
     }
 
+    //
+    // No copying or assignment
+    //
+    SPSCQueue (const SPSCQueue&) = delete;
+    SPSCQueue& operator= (const SPSCQueue&) = delete;
+
     void push (const T & value)
     {
         auto tail = tail_.load ();
@@ -96,7 +105,7 @@ class SPSCQueue
         }
     }
 
-    bool pop ( T & result )
+    bool tryPop ( T & result )
     {
         auto divider = divider_.load ();
         if (divider != tail_)
@@ -107,6 +116,16 @@ class SPSCQueue
             return true;                      // and report success
         }
         return false;               // else report empty
+    }
+
+    T && pop ()
+    {
+        T result;
+        while (! tryPop (result))
+        {
+
+        }
+        return std::move (result);
     }
 };
 

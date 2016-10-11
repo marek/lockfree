@@ -24,7 +24,7 @@ private:
     alignas (CACHE_SIZE) T * buffer_;
 
 public:
-    explicit CircularBuffer(size_t capacity)
+    explicit CircularBuffer (size_t capacity)
         : high_ {0},
           low_ {0},
           capacity_ {capacity}
@@ -35,7 +35,7 @@ public:
 
     ~CircularBuffer()
     {
-        delete[] buffer_;
+        delete [] buffer_;
     }
 
     //
@@ -51,8 +51,7 @@ public:
         const uint64_t low = low_.load (std::memory_order_relaxed);
         uint64_t high = high_.load (std::memory_order_acquire);
         const uint64_t index = high % capacity_;
-        if (buffer_[index] == nullptr
-            && high - low < capacity_
+        if (high - low < capacity_
             && std::atomic_compare_exchange_strong_explicit (
                 &high_,
                 &high,
@@ -87,7 +86,6 @@ public:
                 std::memory_order_relaxed, std::memory_order_relaxed
             ))
         {
-            buffer_[index] = nullptr;
             return ret;
         }
         return nullptr;

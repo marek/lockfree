@@ -7,7 +7,7 @@
 
 namespace lockfree {
 
-#define FREE_BUFFER_SIZE 25000
+#define FREE_BUFFER_SIZE 250000
 #define QUEUE_SIZE 25000
 
 SPSCLockFreeTest::ThreadData::ThreadData ()
@@ -17,7 +17,7 @@ SPSCLockFreeTest::ThreadData::ThreadData ()
     for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
     {
         auto s = new std::string ();
-        s->reserve(1024);
+        s->reserve (1024);
         freeBuffers_.push (s);
     }
 }
@@ -25,13 +25,15 @@ SPSCLockFreeTest::ThreadData::ThreadData ()
 SPSCLockFreeTest::ThreadData::~ThreadData ()
 {
     std::string * s;
-    while (freeBuffers_.size () > 0)
+    while (freeBuffers_.tryPop (s))
     {
-        s = freeBuffers_.pop ();
-        delete s;
+        if (s)
+        {
+            delete s;
+        }
     }
 
-    while (logQueue_.pop (s))
+    while (logQueue_.tryPop (s))
     {
         delete s;
     }
@@ -55,16 +57,22 @@ SPSCLockFreeTest::~SPSCLockFreeTest ()
     }
 }
 
-void SPSCLockFreeTest::worker ()
+void SPSCLockFreeTest::backgroundWriter ()
 {
     running_ = true;
-    while (running_)
+    bool empty_ = false;
+    while (running_ || !empty_)
     {
+        empty_ = true;
         for (auto td : threadData_)
         {
             std::string * logLine;
-            while (td->logQueue_.pop (logLine))
+            while (td->logQueue_.tryPop (logLine))
             {
+                if (empty_)
+                {
+                    empty_ = false;
+                }
                 log (*logLine);
                 td->freeBuffers_.push (logLine);
             }
@@ -82,7 +90,7 @@ void SPSCLockFreeTest::log (const std::string & logLine)
 
 void SPSCLockFreeTest::run ()
 {
-    std::thread threadWorker (&SPSCLockFreeTest::worker, this);
+    std::thread threadWorker (&SPSCLockFreeTest::backgroundWriter, this);
 
     Event e;
 
@@ -93,14 +101,15 @@ void SPSCLockFreeTest::run ()
     for (auto i = 0; i < thread_count; ++i)
     {
         writers.push_back (
-            std::thread ([&e, i, this, lines_per_thread]()
+            std::thread ([&e, i, this, lines_per_thread] ()
             {
                 auto td = threadData_[i];
                 e.wait ();
 
                 for (auto l = 0; l < lines_per_thread; ++l)
                 {
-                    auto s = td->freeBuffers_.pop ();
+                    std::string * s;
+                    s = td->freeBuffers_.pop ();
                     Test::getSentence (*s);
                     td->logQueue_.push (s);
                 }
@@ -110,9 +119,9 @@ void SPSCLockFreeTest::run ()
 
     start ();
     e.set ();
-    for(auto & thread : writers)
+    for (auto & thread : writers)
     {
-        thread.join();
+        thread.join ();
     }
     stop ();
     running_ = false;
