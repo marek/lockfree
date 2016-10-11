@@ -8,7 +8,8 @@ namespace lockfree {
 class Event
 {
   public:
-    Event (bool signaled = false) : signaled_ (signaled)
+    Event (bool signaled = false)
+      : signaled_ (signaled)
     {
     }
 
@@ -30,7 +31,7 @@ class Event
     void wait ()
     {
         std::unique_lock<std::mutex> lock (m_);
-        while (!signaled_)
+        while (! signaled_)
         {
             cv_.wait (lock);
         }

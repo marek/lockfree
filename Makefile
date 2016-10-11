@@ -20,7 +20,7 @@ CLEAN := $(d)/logs/*
 CXX := clang -x c++
 LD := clang++
 LDFLAGS :=  -arch x86_64
-CXXFLAGS := -x c++ -O0 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
+CXXFLAGS := -x c++ -O3 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
 
 
 

@@ -12,7 +12,7 @@ namespace lockfree {
 
 SPSCLockFreeTest::ThreadData::ThreadData ()
   : freeBuffers_ {FREE_BUFFER_SIZE},
-    logQueue_ {}
+    logQueue_ {QUEUE_SIZE}
 {
     for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
     {
