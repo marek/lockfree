@@ -1,7 +1,7 @@
-#
 # lockfree demo
-# Marek Kudlacz
-#
+Marek Kudlacz  
+  
+
 
 This is accompanying code to a intro to lockfree presentation.
 This show cases a practical usage scenario in optimizing a logging system.
