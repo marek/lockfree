@@ -2,43 +2,19 @@
 #include <vector>
 #include <thread>
 
-#include "dualrblockfree.h"
+#include "cblockfree.h"
 #include "event.h"
 
 namespace lockfree {
 
-#define FREE_BUFFER_SIZE 25000
-#define QUEUE_SIZE 25000
-
-DualRBLockFreeTest::DualRBLockFreeTest (int iterations, int threads)
-  : Test {"dualrblockfree", iterations, threads},
-    freeBuffers_ {FREE_BUFFER_SIZE},
-    logQueue_ {QUEUE_SIZE}
+CBLockFreeTest::CBLockFreeTest (int iterations, int threads)
+  : Test {"rblockfree", iterations, threads},
+    logQueue_ {25000}
 {
-    for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
-    {
-        auto s = new std::string ();
-        s->reserve(1024);
-        freeBuffers_.push (s);
-    }
+
 }
 
-DualRBLockFreeTest::~DualRBLockFreeTest ()
-{
-    while (freeBuffers_.size () > 0)
-    {
-        auto s = freeBuffers_.pop ();
-        delete s;
-    }
-
-    while (logQueue_.size () > 0)
-    {
-        auto s = logQueue_.pop ();
-        delete s;
-    }
-}
-
-void DualRBLockFreeTest::worker ()
+void CBLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
@@ -47,21 +23,20 @@ void DualRBLockFreeTest::worker ()
         {
             auto logLine = logQueue_.pop ();
             log (*logLine);
-            freeBuffers_.push (logLine);
+            delete logLine;
         }
         std::this_thread::sleep_for (std::chrono::milliseconds (200));
     }
-    logFile_.flush ();
 }
 
-void DualRBLockFreeTest::log (const std::string & logLine)
+void CBLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void DualRBLockFreeTest::run ()
+void CBLockFreeTest::run ()
 {
-    std::thread threadWorker (&DualRBLockFreeTest::worker, this);
+    std::thread threadWorker (&CBLockFreeTest::worker, this);
 
     Event e;
 
@@ -78,8 +53,9 @@ void DualRBLockFreeTest::run ()
 
                 for (auto l = 0; l < lines_per_thread; ++l)
                 {
-                    auto s = freeBuffers_.pop ();
-                    s->assign (Test::getSentence ());
+                    auto s = new std::string (
+                        Test::getSentence ()
+                    );
                     logQueue_.push (s);
                 }
             })

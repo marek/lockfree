@@ -2,19 +2,43 @@
 #include <vector>
 #include <thread>
 
-#include "rblockfree.h"
+#include "dualcblockfree.h"
 #include "event.h"
 
 namespace lockfree {
 
-RBLockFreeTest::RBLockFreeTest (int iterations, int threads)
-  : Test {"rblockfree", iterations, threads},
-    logQueue_ {25000}
-{
+#define FREE_BUFFER_SIZE 25000
+#define QUEUE_SIZE 25000
 
+DualCBLockFreeTest::DualCBLockFreeTest (int iterations, int threads)
+  : Test {"dualrblockfree", iterations, threads},
+    freeBuffers_ {FREE_BUFFER_SIZE},
+    logQueue_ {QUEUE_SIZE}
+{
+    for (auto i = 0; i < FREE_BUFFER_SIZE; ++i)
+    {
+        auto s = new std::string ();
+        s->reserve(1024);
+        freeBuffers_.push (s);
+    }
 }
 
-void RBLockFreeTest::worker ()
+DualCBLockFreeTest::~DualCBLockFreeTest ()
+{
+    while (freeBuffers_.size () > 0)
+    {
+        auto s = freeBuffers_.pop ();
+        delete s;
+    }
+
+    while (logQueue_.size () > 0)
+    {
+        auto s = logQueue_.pop ();
+        delete s;
+    }
+}
+
+void DualCBLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
@@ -23,20 +47,21 @@ void RBLockFreeTest::worker ()
         {
             auto logLine = logQueue_.pop ();
             log (*logLine);
-            delete logLine;
+            freeBuffers_.push (logLine);
         }
         std::this_thread::sleep_for (std::chrono::milliseconds (200));
     }
+    logFile_.flush ();
 }
 
-void RBLockFreeTest::log (const std::string & logLine)
+void DualCBLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void RBLockFreeTest::run ()
+void DualCBLockFreeTest::run ()
 {
-    std::thread threadWorker (&RBLockFreeTest::worker, this);
+    std::thread threadWorker (&DualCBLockFreeTest::worker, this);
 
     Event e;
 
@@ -53,9 +78,8 @@ void RBLockFreeTest::run ()
 
                 for (auto l = 0; l < lines_per_thread; ++l)
                 {
-                    auto s = new std::string (
-                        Test::getSentence ()
-                    );
+                    auto s = freeBuffers_.pop ();
+                    s->assign (Test::getSentence ());
                     logQueue_.push (s);
                 }
             })

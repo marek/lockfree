@@ -27,8 +27,9 @@ class SPSCQueue
         T value;
         Node * next;
     };
-    Node * head_;                          // for producer only
-    std::atomic<Node *> divider_, tail_;   // shared
+    alignas(CACHE_SIZE) Node * head_;                 // for producer only
+    alignas(CACHE_SIZE) std::atomic<Node *> divider_; // shared
+    alignas(CACHE_SIZE) std::atomic<Node *> tail_;    // shared
 
   public:
     SPSCQueue ()

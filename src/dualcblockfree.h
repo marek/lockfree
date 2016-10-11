@@ -9,11 +9,11 @@
 
 namespace lockfree {
 
-class DualRBLockFreeTest : public Test
+class DualCBLockFreeTest : public Test
 {
   public:
-    DualRBLockFreeTest (int iterations, int threads);
-    ~DualRBLockFreeTest ();
+    DualCBLockFreeTest (int iterations, int threads);
+    ~DualCBLockFreeTest ();
     void run ();
 
   private:

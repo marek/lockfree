@@ -9,10 +9,10 @@
 
 namespace lockfree {
 
-class RBLockFreeTest : public Test
+class CBLockFreeTest : public Test
 {
   public:
-    RBLockFreeTest (int interations, int threads);
+    CBLockFreeTest (int interations, int threads);
     void run ();
 
   private:

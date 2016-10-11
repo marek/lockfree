@@ -1,8 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <cassert>
-#include <type_traits>
 
 namespace lockfree {
 
@@ -29,8 +27,8 @@ class MPSCQueue
         Node*  volatile  next;
     };
 
-    alignas (CACHE_SIZE) std::atomic<Node *> head_;
-    alignas (CACHE_SIZE) Node * tail_;
+    __attribute__((aligned(CACHE_SIZE))) std::atomic<Node *> head_;
+    __attribute__((aligned(CACHE_SIZE))) Node * tail_;
 
   public:
     MPSCQueue ()

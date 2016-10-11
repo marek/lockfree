@@ -2,7 +2,7 @@
 #include <vector>
 #include <thread>
 
-#include "tdrblockfree.h"
+#include "tdcblockfree.h"
 #include "event.h"
 
 namespace lockfree {
@@ -10,7 +10,7 @@ namespace lockfree {
 #define FREE_BUFFER_SIZE 25000
 #define QUEUE_SIZE 25000
 
-ThreadedDualRBLockFreeTest::ThreadData::ThreadData ()
+ThreadedDualCBLockFreeTest::ThreadData::ThreadData ()
   : freeBuffers_ {FREE_BUFFER_SIZE},
     logQueue_ {FREE_BUFFER_SIZE}
 {
@@ -22,7 +22,7 @@ ThreadedDualRBLockFreeTest::ThreadData::ThreadData ()
     }
 }
 
-ThreadedDualRBLockFreeTest::ThreadData::~ThreadData ()
+ThreadedDualCBLockFreeTest::ThreadData::~ThreadData ()
 {
     std::string * s;
     while (freeBuffers_.size () > 0)
@@ -39,7 +39,7 @@ ThreadedDualRBLockFreeTest::ThreadData::~ThreadData ()
 }
 
 
-ThreadedDualRBLockFreeTest::ThreadedDualRBLockFreeTest (int iterations, int threads)
+ThreadedDualCBLockFreeTest::ThreadedDualCBLockFreeTest (int iterations, int threads)
   : Test {"tdrblockfree", iterations, threads}
 {
     for (unsigned i = 0; i < threads; ++i)
@@ -48,7 +48,7 @@ ThreadedDualRBLockFreeTest::ThreadedDualRBLockFreeTest (int iterations, int thre
     }
 }
 
-ThreadedDualRBLockFreeTest::~ThreadedDualRBLockFreeTest ()
+ThreadedDualCBLockFreeTest::~ThreadedDualCBLockFreeTest ()
 {
     for ( auto & td : threadData_)
     {
@@ -56,7 +56,7 @@ ThreadedDualRBLockFreeTest::~ThreadedDualRBLockFreeTest ()
     }
 }
 
-void ThreadedDualRBLockFreeTest::worker ()
+void ThreadedDualCBLockFreeTest::worker ()
 {
     running_ = true;
     while (running_)
@@ -76,14 +76,14 @@ void ThreadedDualRBLockFreeTest::worker ()
     logFile_.flush ();
 }
 
-void ThreadedDualRBLockFreeTest::log (const std::string & logLine)
+void ThreadedDualCBLockFreeTest::log (const std::string & logLine)
 {
     logFile_ << logLine << std::endl;
 }
 
-void ThreadedDualRBLockFreeTest::run ()
+void ThreadedDualCBLockFreeTest::run ()
 {
-    std::thread threadWorker (&ThreadedDualRBLockFreeTest::worker, this);
+    std::thread threadWorker (&ThreadedDualCBLockFreeTest::worker, this);
 
     Event e;
 

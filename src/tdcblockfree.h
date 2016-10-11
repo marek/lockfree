@@ -11,7 +11,7 @@
 
 namespace lockfree {
 
-class ThreadedDualRBLockFreeTest : public Test
+class ThreadedDualCBLockFreeTest : public Test
 {
   public:
     struct ThreadData
@@ -22,8 +22,8 @@ class ThreadedDualRBLockFreeTest : public Test
         CircularBuffer<std::string*> logQueue_;
     };
 
-    ThreadedDualRBLockFreeTest (int iterations, int threads);
-    ~ThreadedDualRBLockFreeTest ();
+    ThreadedDualCBLockFreeTest (int iterations, int threads);
+    ~ThreadedDualCBLockFreeTest ();
     void run ();
 
   private:

@@ -18,10 +18,10 @@ class CircularBuffer
     );
 
 private:
-    __attribute__((aligned(CACHE_SIZE))) std::atomic<uint64_t> high_;
-    __attribute__((aligned(CACHE_SIZE))) std::atomic<uint64_t> low_;
-    __attribute__((aligned(CACHE_SIZE))) size_t capacity_;
-    __attribute__((aligned(CACHE_SIZE))) T * buffer_;
+    alignas(CACHE_SIZE) std::atomic<uint64_t> high_;
+    alignas(CACHE_SIZE) std::atomic<uint64_t> low_;
+    alignas(CACHE_SIZE) size_t capacity_;
+    alignas(CACHE_SIZE) T * buffer_;
 
 public:
     explicit CircularBuffer(size_t capacity)

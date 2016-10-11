@@ -7,11 +7,11 @@
 #include "multipledirect.h"
 #include "worker.h"
 #include "multipleworker.h"
-#include "rblockfree.h"
-#include "dualrblockfree.h"
+#include "cblockfree.h"
+#include "dualcblockfree.h"
 #include "spsclockfree.h"
 #include "mpsclockfree.h"
-#include "tdrblockfree.h"
+#include "tdcblockfree.h"
 
 using namespace lockfree;
 
@@ -30,11 +30,11 @@ int main ()
         &createInstance<MultipleDirectWriteTest>,
         &createInstance<WorkerTest>,
         &createInstance<MultipleWorkerTest>,
-        &createInstance<RBLockFreeTest>,
-        &createInstance<DualRBLockFreeTest>,
+        &createInstance<CBLockFreeTest>,
+        &createInstance<DualCBLockFreeTest>,
         &createInstance<MPSCLockFreeTest>,
         &createInstance<SPSCLockFreeTest>,
-        &createInstance<ThreadedDualRBLockFreeTest>
+        &createInstance<ThreadedDualCBLockFreeTest>
     };
 
     int sample_sizes [] = {
