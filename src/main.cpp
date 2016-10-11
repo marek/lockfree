@@ -11,9 +11,9 @@
 #include "dualrblockfree.h"
 #include "spsclockfree.h"
 #include "mpsclockfree.h"
+#include "tdrblockfree.h"
 
 using namespace lockfree;
-
 
 template <typename T>
 std::shared_ptr<Test> createInstance (int logLines)
@@ -34,6 +34,7 @@ int main ()
         &createInstance<DualRBLockFreeTest>,
         &createInstance<MPSCLockFreeTest>,
         &createInstance<SPSCLockFreeTest>,
+        &createInstance<ThreadedDualRBLockFreeTest>
     };
 
     int sample_sizes [] = {
@@ -46,6 +47,7 @@ int main ()
         1000000
     };
 
+    const unsigned repeats = 1;//10;
 
     //
     // Print the header
@@ -60,7 +62,6 @@ int main ()
     }
     std::cout << std::endl;
 
-
     //
     // Create & run the tests spitting out results
     //
@@ -69,24 +70,31 @@ int main ()
         bool first = true;
         for (auto size : sample_sizes)
         {
-            auto test = creator (size);
-            if (first)
+            double time = 0;
+            for (unsigned r = 0; r < repeats; ++r)
             {
-                std::string testName =  "[ " + test->name () + " ]";
-                std::cout << std::setw(30) << std::left
-                          << testName;
-                first = false;
+                auto test = creator (size);
+                if (first)
+                {
+                    std::string testName =  "[ " + test->name () + " ]";
+                    std::cout << std::setw(30) << std::left
+                              << testName;
+                    first = false;
+                }
+
+                test->run ();
+
+                time += test->duration ().count ();
             }
 
-            test->run ();
-
             std::string testTime = std::to_string (
-                    test->duration ().count ()
-                ) + "s";
+                time / repeats
+            ) + "s";
 
             std::cout << std::setw(16) << std::right
                       << testTime;
             std::cout.flush ();
+
         }
         std::cout << std::endl;
     }

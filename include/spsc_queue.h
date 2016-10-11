@@ -68,7 +68,7 @@ class SPSCQueue
         {
             // if queue is nonempty
             result = divider->next->value;    // C: copy it back
-            divider_ = divider->next;        // D: publish that we took it
+            divider_ = divider->next;         // D: publish that we took it
             return true;                      // and report success
         }
         return false;               // else report empty

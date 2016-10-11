@@ -1,12 +1,9 @@
 #pragma once
 
-// @cond
 #include <atomic>
 #include <cassert>
 #include <unistd.h>
 #include <type_traits>
-// @endcond
-
 
 namespace lockfree {
 
