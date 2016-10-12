@@ -4,7 +4,8 @@
 d := $(shell pwd)
 BUILD_DIR := builds
 BIN_DIR := $(BUILD_DIR)/bin
-
+VENV_DIR := $(BUILD_DIR)/venv
+VENV_REQUIREMENTS := $(d)/tools/requirements.txt
 #
 # Project settings & targets
 #
@@ -102,3 +103,13 @@ run: $(TARGET)
 
 debug: $(TARGET)
 	$(call echo_cmd,DEBUG $(TARGET)) lldb $(TARGET)
+
+vvenv:
+	@mkdir -p $(VENV_DIR)
+	$(call echo_cmd,VIRTUALENV Creating $(VENV_DIR)...) virtualenv -p python3 $(VENV_DIR)
+	$(call echo_cmd,VIRTUALENV Installing $(VENV_REQUIREMENTS)...) source $(VENV_DIR)/bin/activate; pip install -r $(VENV_REQUIREMENTS)
+
+graph: vvenv
+	$(call echo_cmd,GRAPH Generating from $(d)/logs/output.txt) \
+		source $(VENV_DIR)/bin/activate; \
+		python3 $(d)/tools/graph.py --input $(d)/logs/output.txt --output $(BUILD_DIR)/output

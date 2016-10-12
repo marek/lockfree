@@ -1,14 +1,67 @@
+#!/usr/bin/env bash
+import plotly.offline as offline
 import plotly.plotly as py
 import plotly.graph_objs as go
+from IPython.display import Image
 import csv
+import string
+import argparse
+
+parser = argparse.ArgumentParser(description='Process lockfree log')
+parser.add_argument (
+    '--input',
+    help='input file')
+
+parser.add_argument(
+    '--output',
+    help='output of graph picture'
+    )
+
+args = parser.parse_args()
 
 
 # parse header
-import fileinput
+headerDefined = False
+xLabels = None
+xTitle = None
 
-gotHeader = False
-Y_label = 
+def filterRow(row):
+    return row[1:2] + [ s.translate(
+             {ord(c): None for c in string.ascii_letters}
+           ) for s in row[3:]]
 
-for line in csv.reader(fileinput.input()):
-    if not gotHeader:
-        Y label.
+data = []
+
+for row in csv.reader(open(args.input, 'r'), delimiter=' ', skipinitialspace=True):
+    row = filterRow(row)
+    if not headerDefined:
+        xTitle = row[0]
+        xLabels = row[1:]
+        headerDefined = True
+        continue
+
+    print (row)
+
+    trace = go.Scatter(
+            x = xLabels,
+            y = row[1:],
+            name = row[0],
+            line = dict(
+                width = 4
+                )
+        )
+
+    data.append(trace)
+
+offline.init_notebook_mode()
+
+layout = dict(title = 'Queue Performance',
+              xaxis = dict(title = xTitle),
+              yaxis = dict(title = 'Time (seconds)')
+            )
+
+# Plot and embed in ipython notebook!
+fig = dict(data=data, layout=layout)
+offline.plot(fig, auto_open=False, image='png', filename=args.output, image_filename=args.output)
+#py.image.save_as(fig, filename="foo.jpeg")
+#Image(filename=args.output)

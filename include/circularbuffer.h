@@ -67,7 +67,7 @@ public:
 
     inline void push (const T in)
     {
-        while (!tryPush (in))
+        while (! tryPush (in))
         {
             // Empty
         }

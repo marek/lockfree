@@ -25,7 +25,7 @@ std::shared_ptr<Test> createInstance (int logLines)
 
 int main ()
 {
-    std::vector<std::function<std::shared_ptr<Test>(int)>> tests = {
+    std::vector<std::function<std::shared_ptr<Test> (int)>> tests = {
         &createInstance<DirectWriteTest>,
         &createInstance<MultipleDirectWriteTest>,
         &createInstance<WorkerTest>,
@@ -37,7 +37,7 @@ int main ()
         &createInstance<ThreadedDualCBLockFreeTest>
     };
 
-    int sample_sizes [] = {
+    unsigned sample_sizes [] = {
         5000,
         10000,
         25000,

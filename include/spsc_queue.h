@@ -31,6 +31,7 @@ class SPSCQueue
         T value;
         Node * next;
     };
+
     alignas (CACHE_SIZE) Node * head_;                 // for producer only
     alignas (CACHE_SIZE) std::atomic<Node *> divider_; // shared
     alignas (CACHE_SIZE) std::atomic<Node *> tail_;    // shared
