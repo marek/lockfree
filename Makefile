@@ -112,4 +112,4 @@ vvenv:
 graph: vvenv
 	$(call echo_cmd,GRAPH Generating from $(d)/logs/output.txt) \
 		source $(VENV_DIR)/bin/activate; \
-		python3 $(d)/tools/graph.py --input $(d)/logs/output.txt --output $(BUILD_DIR)/output
+		python3 $(d)/tools/graph.py --input $(d)/logs/output.txt --output $(BUILD_DIR)/output.html
