@@ -51,7 +51,8 @@ public:
         const uint64_t low = low_.load (std::memory_order_relaxed);
         uint64_t high = high_.load (std::memory_order_acquire);
         const uint64_t index = high % capacity_;
-        if (high - low < capacity_
+        if (buffer_[index] == nullptr
+            && high - low < capacity_
             && std::atomic_compare_exchange_strong_explicit (
                 &high_,
                 &high,
@@ -86,6 +87,7 @@ public:
                 std::memory_order_relaxed, std::memory_order_relaxed
             ))
         {
+            buffer_[index] = nullptr;
             return ret;
         }
         return nullptr;

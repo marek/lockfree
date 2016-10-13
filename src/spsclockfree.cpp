@@ -39,7 +39,6 @@ SPSCLockFreeTest::ThreadData::~ThreadData ()
     }
 }
 
-
 SPSCLockFreeTest::SPSCLockFreeTest (int iterations, int threads)
   : Test {"spsclockfree", iterations, threads}
 {
@@ -90,17 +89,17 @@ void SPSCLockFreeTest::log (const std::string & logLine)
 
 void SPSCLockFreeTest::run ()
 {
-    std::thread threadWorker (&SPSCLockFreeTest::backgroundWriter, this);
+    std::thread threadWriter (&SPSCLockFreeTest::backgroundWriter, this);
 
     Event e;
 
     auto thread_count = threads ();
     auto lines_per_thread = iterations () / threads ();
 
-    std::vector<std::thread> writers;
+    std::vector<std::thread> workers;
     for (auto i = 0; i < thread_count; ++i)
     {
-        writers.push_back (
+        workers.push_back (
             std::thread ([&e, i, this, lines_per_thread] ()
             {
                 auto td = threadData_[i];
@@ -119,13 +118,13 @@ void SPSCLockFreeTest::run ()
 
     start ();
     e.set ();
-    for (auto & thread : writers)
+    for (auto & thread : workers)
     {
         thread.join ();
     }
     stop ();
     running_ = false;
-    threadWorker.join ();
+    threadWriter.join ();
 }
 
 } // namespace lockfree

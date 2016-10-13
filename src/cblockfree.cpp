@@ -8,7 +8,7 @@
 namespace lockfree {
 
 CBLockFreeTest::CBLockFreeTest (int iterations, int threads)
-  : Test {"rblockfree", iterations, threads},
+  : Test {"cblockfree", iterations, threads},
     logQueue_ {25000}
 {
 
@@ -36,17 +36,17 @@ void CBLockFreeTest::log (const std::string & logLine)
 
 void CBLockFreeTest::run ()
 {
-    std::thread threadWorker (&CBLockFreeTest::backgroundWriter, this);
+    std::thread threadWriter (&CBLockFreeTest::backgroundWriter, this);
 
     Event e;
 
     auto thread_count = threads ();
     auto lines_per_thread = iterations () / threads ();
 
-    std::vector<std::thread> writers;
+    std::vector<std::thread> workers;
     for (auto i = 0; i < thread_count; ++i)
     {
-        writers.push_back (
+        workers.push_back (
             std::thread ([&]()
             {
                 e.wait ();
@@ -64,13 +64,13 @@ void CBLockFreeTest::run ()
 
     start ();
     e.set ();
-    for (auto & thread : writers)
+    for (auto & thread : workers)
     {
         thread.join ();
     }
     stop ();
     running_ = false;
-    threadWorker.join ();
+    threadWriter.join ();
 }
 
 } // namespace lockfree

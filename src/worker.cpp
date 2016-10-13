@@ -35,7 +35,7 @@ void WorkerTest::log (const std::string & logLine)
 
 void WorkerTest::run ()
 {
-    std::thread threadWorker (&WorkerTest::backgroundWriter, this);
+    std::thread threadWriter (&WorkerTest::backgroundWriter, this);
 
     auto lines = iterations ();
 
@@ -47,7 +47,7 @@ void WorkerTest::run ()
     }
     stop ();
     running_ = false;
-    threadWorker.join ();
+    threadWriter.join ();
 }
 
 } // namespace lockfree

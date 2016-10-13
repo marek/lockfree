@@ -37,17 +37,20 @@ void MultipleWorkerTest::log (const std::string & logLine)
 
 void MultipleWorkerTest::run ()
 {
-    std::thread threadWorker (&MultipleWorkerTest::backgroundWriter, this);
+    std::thread threadWriter (
+        &MultipleWorkerTest::backgroundWriter,
+        this
+    );
 
     Event e;
 
     auto thread_count = threads ();
     auto lines_per_thread = iterations () / threads ();
 
-    std::vector<std::thread> writers;
+    std::vector<std::thread> workers;
     for (unsigned int i = 0; i < thread_count; ++i)
     {
-        writers.push_back (
+        workers.push_back (
             std::thread ([&]()
             {
                 e.wait ();
@@ -64,13 +67,13 @@ void MultipleWorkerTest::run ()
 
     start ();
     e.set ();
-    for (auto & thread : writers)
+    for (auto & thread : workers)
     {
         thread.join ();
     }
     stop ();
     running_ = false;
-    threadWorker.join ();
+    threadWriter.join ();
 }
 
 } // namespace lockfree

@@ -53,8 +53,8 @@ class MPSCQueue
     //
     // No copying or assignment
     //
-    SPSCQueue (const SPSCQueue&) = delete;
-    SPSCQueue& operator= (const SPSCQueue&) = delete;
+    MPSCQueue (const MPSCQueue&) = delete;
+    MPSCQueue& operator= (const MPSCQueue&) = delete;
 
     void push (T value)
     {

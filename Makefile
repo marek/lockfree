@@ -6,6 +6,7 @@ BUILD_DIR := builds
 BIN_DIR := $(BUILD_DIR)/bin
 VENV_DIR := $(BUILD_DIR)/venv
 VENV_REQUIREMENTS := $(d)/tools/requirements.txt
+
 #
 # Project settings & targets
 #
@@ -22,7 +23,6 @@ CXX := clang -x c++
 LD := clang++
 LDFLAGS :=  -arch x86_64
 CXXFLAGS := -x c++ -O3 -g -Wall -arch x86_64 -fmessage-length=0 -std=c++14 -stdlib=libc++ -c
-
 
 
 #
