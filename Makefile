@@ -104,12 +104,14 @@ run: $(TARGET)
 debug: $(TARGET)
 	$(call echo_cmd,DEBUG $(TARGET)) lldb $(TARGET)
 
-vvenv:
+$(VENV_DIR) : $(VENV_REQUIREMENTS)
 	@mkdir -p $(VENV_DIR)
 	$(call echo_cmd,VIRTUALENV Creating $(VENV_DIR)...) virtualenv -p python3 $(VENV_DIR)
 	$(call echo_cmd,VIRTUALENV Installing $(VENV_REQUIREMENTS)...) source $(VENV_DIR)/bin/activate; pip install -r $(VENV_REQUIREMENTS)
 
-graph: vvenv
+venv : ($VENV_DIR)
+
+graph: $(VENV_DIR)
 	$(call echo_cmd,GRAPH Generating from $(d)/logs/output.txt) \
 		source $(VENV_DIR)/bin/activate; \
 		python3 $(d)/tools/graph.py --input $(d)/logs/output.txt --output $(BUILD_DIR)/output.html

@@ -15,26 +15,53 @@
 
 using namespace lockfree;
 
+
 template <typename T>
-std::shared_ptr<Test> createInstance (int logLines)
+std::shared_ptr<Test> createInstance (
+    const int logLines,
+    const int threads,
+    const std::string & name)
 {
-    return std::dynamic_pointer_cast<Test>(
-        std::make_shared<T> (logLines, 5)
+    auto test = std::dynamic_pointer_cast<Test>(
+        std::make_shared<T> (logLines, threads)
     );
+
+    if (name.size () > 0)
+    {
+        test->setName (name);
+    }
+    return test;
+}
+
+template <typename T>
+std::function<std::shared_ptr<Test> (int)> makeTest (
+    int threads = 5,
+    std::string name = ""
+)
+{
+    return [threads,&name] (int logLines) {
+        return createInstance<T> (logLines, threads, name);
+    };
 }
 
 int main ()
 {
+    Test::useDevNull (false);
+
     std::vector<std::function<std::shared_ptr<Test> (int)>> tests = {
-        &createInstance<DirectWriteTest>,
-        &createInstance<MultipleDirectWriteTest>,
-        &createInstance<WorkerTest>,
-        &createInstance<MultipleWorkerTest>,
-        &createInstance<CBLockFreeTest>,
-        &createInstance<DualCBLockFreeTest>,
-        &createInstance<MPSCLockFreeTest>,
-        &createInstance<SPSCLockFreeTest>,
-        &createInstance<ThreadedDualCBLockFreeTest>
+        makeTest<DirectWriteTest> (),
+        makeTest<MultipleDirectWriteTest> (),
+        makeTest<WorkerTest> (),
+        makeTest<MultipleWorkerTest> (),
+        makeTest<MultipleWorkerTest> (25, "worker[25]"),
+        makeTest<MultipleWorkerTest> (50, "worker[50]"),
+        makeTest<CBLockFreeTest> (),
+        makeTest<DualCBLockFreeTest> (),
+        makeTest<MPSCLockFreeTest> (),
+        makeTest<SPSCLockFreeTest> (),
+        makeTest<SPSCLockFreeTest> (25, "spsc[25]"),
+        makeTest<SPSCLockFreeTest> (50, "spsc[50]"),
+        makeTest<ThreadedDualCBLockFreeTest> ()
     };
 
     unsigned sample_sizes [] = {

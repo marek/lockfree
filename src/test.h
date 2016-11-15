@@ -20,6 +20,7 @@ class Test
     double_seconds duration ();
 
     const std::string & name () { return testName_; }
+    void setName (const std::string & name) { testName_ = name; }
     int iterations () { return iterations_; }
     int threads () { return threads_; }
 
@@ -29,6 +30,8 @@ class Test
     static std::string getSentence ();
     static void getWord (std::string & s);
     static void getSentence (std::string & s);
+
+    static void useDevNull (const bool use) { Test::useDevNull_ = use; };
   protected:
 
     std::ofstream logFile_;
@@ -39,6 +42,8 @@ class Test
     int threads_;
     std::chrono::time_point<std::chrono::high_resolution_clock> start_;
     std::chrono::time_point<std::chrono::high_resolution_clock> end_;
+
+    static bool useDevNull_;
 };
 
 

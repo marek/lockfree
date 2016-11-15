@@ -8,6 +8,8 @@
 
 namespace lockfree {
 
+bool Test::useDevNull_ = false;
+
 Test::Test (const std::string & testName, int iterations, int threads)
    : testName_ {testName},
      iterations_ {iterations},
@@ -22,7 +24,14 @@ Test::Test (const std::string & testName, int iterations, int threads)
         return std::string (temp);
     } ();
 
-    logFile_.open (cwd + "/logs/" + testName_ + ".log");
+    if (Test::useDevNull_)
+    {
+        logFile_.open ("/dev/null");
+    }
+    else
+    {
+        logFile_.open (cwd + "/logs/" + testName_ + ".log");
+    }
 
     // seed each test with the same result
     srand (42);
