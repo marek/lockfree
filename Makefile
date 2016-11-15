@@ -61,8 +61,8 @@ t_CLEAN := ${t_yellow}
 t_DEBUG := ${t_red}
 
 # Fancy echo command
-override VERBOSE := $(call istrue,$(VERBOSE) $(V))
-ifeq ($(false),$(VERBOSE))
+VERBOSE ?= 0
+ifeq ("$(VERBOSE)","0")
   echo_cmd_no_quiet = echo "${t_bold}${t_$(firstword $(1))}$(firstword $(1))${t_normal} $(wordlist 2,$(words $1),$(1))";
   echo_cmd = @$(call echo_cmd_no_quiet,$1)
   _@ := @
@@ -76,8 +76,9 @@ endif
 define CREATE_RULE_CPP
 $(1) : $(2)
 	@mkdir -p $(dir $1)
-	$(call echo_cmd,CPP $(2)) $(CXX) $(CXXFLAGS) $(2) -o $(1)
+	$(call echo_cmd,CPP $(2)) $(CXX) -MD -MF $(patsubst %.o,%.d,$(1)) $(CXXFLAGS) $(2) -o $(1)
 	${\n}
+-include $(patsubst %.o,%.d,$(1))
 endef
 
 $(foreach obj,$(OBJS),$(eval $(call CREATE_RULE_CPP,$(strip $(obj)),$(subst $(BUILD_DIR)/,,$(patsubst %.o,%.cpp,$(obj))))))
