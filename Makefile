@@ -100,6 +100,7 @@ clean:
 
 
 run: $(TARGET)
+	@mkdir -p $(d)/logs
 	$(call echo_cmd,RUN $(TARGET)) $(TARGET) | tee $(d)/logs/output.txt
 
 debug: $(TARGET)

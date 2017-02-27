@@ -26,7 +26,7 @@ class MPSCQueue
 
         }
         T value;
-        Node*  volatile  next;
+        Node * volatile  next;
     };
 
     alignas (CACHE_SIZE) std::atomic<Node *> head_;
