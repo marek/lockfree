@@ -107,8 +107,7 @@ void SPSCLockFreeTest::run ()
 
                 for (auto l = 0; l < lines_per_thread; ++l)
                 {
-                    std::string * s;
-                    s = td->freeBuffers_.pop ();
+                    std::string * s = td->freeBuffers_.pop ();
                     Test::getSentence (*s);
                     td->logQueue_.push (s);
                 }

@@ -12,6 +12,8 @@
 #include "spsclockfree.h"
 #include "mpsclockfree.h"
 #include "tdcblockfree.h"
+#include "bulkworker.h"
+#include "poorspsc.h"
 
 using namespace lockfree;
 
@@ -52,6 +54,7 @@ int main ()
         makeTest<DirectWriteTest> (),
         makeTest<MultipleDirectWriteTest> (),
         makeTest<WorkerTest> (),
+        makeTest<BulkWorkerTest> (),
         makeTest<MultipleWorkerTest> (),
         makeTest<MultipleWorkerTest> (25, "worker[25]"),
         makeTest<MultipleWorkerTest> (50, "worker[50]"),
@@ -59,6 +62,7 @@ int main ()
         makeTest<DualCBLockFreeTest> (),
         makeTest<MPSCLockFreeTest> (),
         makeTest<SPSCLockFreeTest> (),
+        makeTest<PoorSPSCTest> (),
         makeTest<SPSCLockFreeTest> (25, "spsc[25]"),
         makeTest<SPSCLockFreeTest> (50, "spsc[50]"),
         makeTest<ThreadedDualCBLockFreeTest> ()
