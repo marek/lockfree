@@ -7,13 +7,13 @@
 #include "multipledirect.h"
 #include "worker.h"
 #include "multipleworker.h"
-#include "cblockfree.h"
-#include "dualcblockfree.h"
-#include "spsclockfree.h"
-#include "mpsclockfree.h"
-#include "tdcblockfree.h"
+#include "cb.h"
+#include "dualcb.h"
+#include "hsspsc.h"
+#include "mpsc.h"
+#include "tdcb.h"
 #include "bulkworker.h"
-#include "poorspsc.h"
+#include "spsc.h"
 
 using namespace lockfree;
 
@@ -58,14 +58,14 @@ int main ()
         makeTest<MultipleWorkerTest> (),
         //makeTest<MultipleWorkerTest> (25, "worker[25]"),
         //makeTest<MultipleWorkerTest> (50, "worker[50]"),
-        //makeTest<CBLockFreeTest> (),
-        makeTest<DualCBLockFreeTest> (),
-        makeTest<MPSCLockFreeTest> (),
-        makeTest<SPSCLockFreeTest> (),
-        //makeTest<PoorSPSCTest> (),
-        //makeTest<SPSCLockFreeTest> (25, "spsc[25]"),
-        //makeTest<SPSCLockFreeTest> (50, "spsc[50]"),
-        //makeTest<ThreadedDualCBLockFreeTest> ()
+        //makeTest<CBTest> (),
+        //makeTest<DualCBTest> (),
+        makeTest<MPSCTest> (),
+        makeTest<HSSPSCTest> (),
+        makeTest<SPSCTest> (),
+        makeTest<SPSCTest> (25, "spsc[25]"),
+        makeTest<SPSCTest> (50, "spsc[50]"),
+        makeTest<ThreadedDualCBTest> ()
     };
 
     unsigned sample_sizes [] = {
