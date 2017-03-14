@@ -52,7 +52,7 @@ int main ()
 
     std::vector<std::function<std::shared_ptr<Test> (int)>> tests = {
         makeTest<DirectWriteTest> (),
-        makeTest<MultipleDirectWriteTest> (),
+        //makeTest<MultipleDirectWriteTest> (),
         //makeTest<WorkerTest> (),
         makeTest<BulkWorkerTest> (),
         makeTest<MultipleWorkerTest> (),
@@ -60,12 +60,12 @@ int main ()
         //makeTest<MultipleWorkerTest> (50, "worker[50]"),
         //makeTest<CBTest> (),
         //makeTest<DualCBTest> (),
-        makeTest<MPSCTest> (),
-        makeTest<HSSPSCTest> (),
+        //makeTest<MPSCTest> (),
+        //makeTest<HSSPSCTest> (),
         makeTest<SPSCTest> (),
-        makeTest<SPSCTest> (25, "spsc[25]"),
-        makeTest<SPSCTest> (50, "spsc[50]"),
-        makeTest<ThreadedDualCBTest> ()
+        //makeTest<SPSCTest> (25, "spsc[25]"),
+        //makeTest<SPSCTest> (50, "spsc[50]"),
+        //makeTest<ThreadedDualCBTest> ()
     };
 
     unsigned sample_sizes [] = {

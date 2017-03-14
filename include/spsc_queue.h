@@ -75,6 +75,7 @@ class SPSCQueue
             // if queue is nonempty
             result = head->next->value;    // C: copy it back
             head_ = head->next;         // D: publish that we took it
+            delete head;
             return true;                      // and report success
         }
         return false;               // else report empty
